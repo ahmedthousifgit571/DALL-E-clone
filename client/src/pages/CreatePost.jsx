@@ -2,14 +2,8 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { preview } from "../assets";
-import { getRandomPrompt } from "../utils";
+import { getRandomPrompt} from "../utils";
 import { FormField, Loader } from "../components";
-
-const handleSubmit = () => {};
-
-const handleChange = (e) => {};
-
-const handleSurpriseMe = () => {};
 
 const CreatePost = () => {
   const navigate = useNavigate();
@@ -20,6 +14,19 @@ const CreatePost = () => {
   });
   const [generateingImg, setGenerateingImg] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  const generateImage = () => {};
+
+const handleSubmit = () => {};
+
+const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
+
+
+const handleSurpriseMe = () => {
+  const randomPrompt = getRandomPrompt(form.prompt);
+  console.log("Surprise Me Clicked:", randomPrompt);
+  setForm({ ...form, prompt: randomPrompt });
+};
   return (
     <section className="max-w-7xl mx-auto">
       <div>
@@ -36,7 +43,7 @@ const CreatePost = () => {
             labelName="your name"
             type="text"
             name="name"
-            placeholder="John Doe"
+            placeholder="Ex., John Doe"
             value={form.name}
             handleChange={handleChange}
           />
@@ -44,13 +51,57 @@ const CreatePost = () => {
           <FormField
             labelName="your prompt"
             type="text"
-            name="name"
+            name="prompt"
             placeholder="panda mad scientist mixing sparkling chemicals, digital art"
             value={form.prompt}
             handleChange={handleChange}
             isSurpriseMe
             handleSurpriseMe={handleSurpriseMe}
           />
+
+          <div className="relative bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 w-64 p-3 h-64 flex justify-center items-center">
+            {form.photo ? (
+              <img
+                src={form.photo}
+                alt={form.prompt}
+                className="w-full h-full object-contain"
+              />
+            ) : (
+              <img
+                src={preview}
+                alt="preview"
+                className="w-9/12 h-9/12 object-contain opacity-40"
+              />
+            )}
+
+            {generateingImg && (
+              <div className="absolute inset-0 z-0 flex justify-center items-center bg-[rgba(0,0,0,0.5)] rounded-lg">
+                <Loader />
+              </div>
+            )}
+          </div>
+        </div>
+
+        <div className="mt-5 flex gap-5">
+          <button
+            type={generateImage}
+            className="text-white bg-green-700 font-medium rounded-md text-sm w-full sm:w-auto px-5 py-2.5 text-center"
+          >
+            {generateingImg ? "Generating..." : "Generate"}
+          </button>
+        </div>
+
+        <div className="mt-10">
+          <p className="mt-2 text-[#666e75] text-[14px]">
+            Once you have created the image you want, you can share it with
+            others in the community
+          </p>
+          <button
+            type="submit"
+            className="mt-3 text-white bg-[#6469ff] font-medium rounded-md text-sm w-full sm:w-auto px-5 py-2.5 text-center"
+          >
+            {loading ? "Sharing..." : "Share with the community"}
+          </button>
         </div>
       </form>
     </section>
